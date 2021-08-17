@@ -13,6 +13,7 @@ struct ContentView: View {
     @State var alertTitle = ""
     @State var alertMessage = ""
     @State var showingAlert = false
+    @State var stepperFlag = 0
     static var defaultWakeTime: Date {
         var components = DateComponents()
         components.hour = 7
@@ -55,9 +56,24 @@ struct ContentView: View {
                 }
                 Section {
                     Section(header: Text("Desired amount of sleep:").font(.headline)) {
-                        Stepper(value: $sleepAmount, in: 4...12 , step: 0.25) {
+                        /*Stepper(value: $sleepAmount, in: 4...12 , step: 0.25) {
                             Text("\(sleepAmount, specifier: "%g") hrs")
-                        }
+                        }*/
+                        Stepper(
+                            onIncrement: {
+                                sleepAmount += 0.25
+                                stepperFlag = 1
+                            },
+                            onDecrement: {
+                                sleepAmount -= 0.25
+                                stepperFlag = -1
+                            },
+                            label: {
+                                Text("\(sleepAmount, specifier: "%g") hrs").accessibility(hidden: true)
+                            })
+                            .accessibility(label: Text("Sleep Stepper"))
+                            .accessibility(value: Text("\(stepperFlag == 1 ? "increase sleep time by 0.25 hours. Now set to \(sleepAmount) hours" : "decrease sleep time by 0.25 hours. Now set to \(sleepAmount) hours")"))
+                       
                     }
                 }
                 Section {
